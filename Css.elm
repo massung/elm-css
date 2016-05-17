@@ -8,12 +8,12 @@ module Css exposing
     )
 
 {-| This module is designed to allow you to add type-safe CSS styling
-to your rendered Html via <style> tags. It has basic support for @import
+to your rendered Html via style tags. It has basic support for @import
 directives and CSS rules.
 
 Assuming you have types for id and class attributes, you "compile" a
-`Stylesheet` with the `stylesheet` function and use the functions returned
-in the `Stylesheet` to generate id and class attributes.
+Stylesheet with the stylesheet function and use the functions returned
+in the Stylesheet to generate id and class attributes.
 
 For example:
 
@@ -22,23 +22,18 @@ For example:
     
     -- import some google fonts
     imports =
-        [ "https://fonts.googleapis.com/css?family=Droid+Sans:400,700"
-        ]
+        ["https://fonts.googleapis.com/css?family=Droid+Sans:400,700"]
 
-    -- create a couple Css.rules, notice the use of `MyId` and `MyClass`. 
-    rules =
-        [ { selectors = [ Css.Id MyId ]
-          , descriptor = [ ("color", "#63d") ]
-          }
-        , { selectors = [ Css.Class MyClass ]
-          , descriptor = [ ("text-decoration", "underline")
-          }
-        ]
+    -- create a couple Css.rules, notice the use of MyId. 
+    rule =
+        { selectors = [ Css.Id MyId ]
+        , descriptor = [ ("color", "#63d") ]
+        }
     
     -- compile a stylesheet with no @imports and a couple rules
-    stylesheet = Css.stylesheet imports rules
+    stylesheet = Css.stylesheet imports [rule]
     
-    -- now, add the <style> node, and safely use your ids and classes
+    -- now, add the style node, and safely use your ids and classes
     html =
         div []
             [ stylesheet.node
@@ -57,9 +52,9 @@ import Html
 import Html.Attributes
 import String exposing (concat, cons, join)
 
-{-| A Stylesheet is a "compiled" Html <style> node, as well as functions
+{-| A Stylesheet is a "compiled" Html style node, as well as functions
 that allow you to safely create Html.Attributes for the id and class of
-your tags. It is returned by the `css` function.
+your tags. It is returned by the stylesheet function.
 -}
 type alias Stylesheet id cls msg =
     { node : Html.Html msg
@@ -106,7 +101,7 @@ type Sel id cls
     | Pseudo (List Pseudo) (Sel id cls)
 
 {-| Pseudo CSS selectors and elements. These are chained together in the
-`Pseudo` selector.
+Pseudo selector.
 -}
 type Pseudo
     = Any
@@ -150,7 +145,7 @@ type Pseudo
 {-| A list of key/value style properties. -}
 type alias Descriptor = List (String, String)
 
-{-| A `Rule` is a list of matching selectors and a descriptor, which is
+{-| A Rule is a list of matching selectors and a descriptor, which is
 a list of key/value style pairs. Each selector is a separate possible match
 for the rule. For example:
 
@@ -244,10 +239,10 @@ importUrl : String -> String
 importUrl url =
     concat [ "@import url(", url, ");" ]
 
-{-| Compiles a `Stylesheet` if given a list of urls to @import and
-a list of `Rule`s to generate. The `Stylesheet` contains an `Html.node`
+{-| Compiles a Stylesheet if given a list of urls to @import and
+a list of Rules to generate. The Stylesheet contains an Html.node
 to include in your DOM and functions for generating type-safe id and
-class `Html.Attribute`s.
+class Html.Attributes.
 -} 
 stylesheet : List String -> List (Rule id cls) -> Stylesheet id cls msg
 stylesheet urls rules =
