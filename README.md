@@ -13,7 +13,6 @@ type class = MyClass
 -- import a font
 imports = ["https://fonts.googleapis.com/css?family=Droid+Sans:400"]
 
-
 -- create a rule
 rule =
     { selectors = [Css.Class MyClass]
