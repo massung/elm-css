@@ -7,28 +7,38 @@ What makes `elm-css` "type-safe" is that all the IDs and classes used by your HT
 For example:
 
 ```elm
-    type Id = MyId
-    type class = MyClass
+type Id = MyId
+type class = MyClass
+
+-- import a font
+imports = ["https://fonts.googleapis.com/css?family=Droid+Sans:400"]
+
+
+-- create a rule
+rule =
+    { selectors = [Css.Class MyClass]
+    , descriptor = [("font-family", "Droid Sans")]
+    }
     
-    -- import a font
-    imports = ["https://fonts.googleapis.com/css?family=Droid+Sans:400"]
-    
-    
-    -- create a rule
-    rule =
-        { selectors = [Css.Class MyClass]
-        , descriptor = [("font-family", "Droid Sans")]
-        }
-        
-    -- create the stylesheet
-    stylesheet = Css.stylesheet imports [rule]
-    
-    -- render some HTML that uses it
-    render =
-        Html.div []
-            [ stylesheet.node
-            , div [ stylesheet.class MyClass ] [ Html.text "Droid Sans!" ]
-            ]
+-- create the stylesheet
+stylesheet = Css.stylesheet imports [rule]
+
+-- render some HTML that uses it
+render =
+    Html.div []
+        [ stylesheet.node
+        , div [ stylesheet.class MyClass ] [ Html.text "Droid Sans!" ]
+        ]
 ```
 
-Much of the [CSS3](https://www.w3.org/TR/css-cascade-3/) is supported: `@import`, type, id, class, descendants, children, siblings, adjacents, and pseudo-class/element selectors.
+List of currently supported features:
+
+* @import urls
+* Type selectors (e.g. "div")
+* Id selectors (e.g. "#content")
+* Class selectors (e.g. ".menu-item")
+* Descendant selectors (e.g. "div table")
+* Immediate child selectors (e.g. "hr > p")
+* Sibling selectors (e.g. "li ~ li")
+* Adjacent selectors (e.g. "br + p")
+* Pseudo classes and elements (e.g. "p:first-line:first-letter::after")
