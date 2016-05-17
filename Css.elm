@@ -50,7 +50,7 @@ For example:
 @docs Stylesheet, Sel, Pseudo, Descriptor, Rule
 
 # Functions
-@docs css
+@docs stylesheet
 -}
 
 import Html
