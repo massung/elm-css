@@ -1,4 +1,4 @@
-# Type-safe <style> tags for elm-lang/html
+# Type-safe &lt;style&gt; tags for elm-lang/html
 
 When using `elm-reactor`, there's currently no way to (easily) include a CSS file for use by your view. The `elm-css` package allows you to code type-safe stylesheets in Elm and render them to your view like any other node.
 
