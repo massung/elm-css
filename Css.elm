@@ -260,7 +260,7 @@ stylesheet urls rules =
     , classes = Html.Attributes.class << join " " << List.map toString
     }
 
-{-| Render a style tag node. This is no different than  -}
+{-| Render a style tag node. -}
 style : List (Html.Attribute msg) -> Stylesheet id cls msg -> Html.Html msg
 style attributes sheet =
     Html.node "style" attributes [ sheet.node ]
