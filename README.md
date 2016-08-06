@@ -8,7 +8,7 @@ For example:
 
 ```elm
 type Id = MyId
-type class = MyClass
+type Class = MyClass
 
 -- import a font
 imports = ["https://fonts.googleapis.com/css?family=Droid+Sans:400"]

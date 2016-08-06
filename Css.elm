@@ -5,6 +5,7 @@ module Css exposing
     , Descriptor
     , Rule
     , stylesheet
+    , style
     )
 
 {-| This module is designed to allow you to add type-safe CSS styling
@@ -22,21 +23,26 @@ For example:
     
     -- import some google fonts
     imports =
-        ["https://fonts.googleapis.com/css?family=Droid+Sans:400,700"]
+        ["https://fonts.googleapis.com/css?family=Droid+Sans:400,700"
+        ]
 
-    -- create a couple Css.rules, notice the use of MyId. 
-    rule =
-        { selectors = [ Css.Id MyId ]
-        , descriptor = [ ("color", "#63d") ]
-        }
+    -- create ruels, notice the use of MyId and MyClass. 
+    rules =
+        [ { selectors = [ Css.Id MyId ]
+          , descriptor = [ ("color", "red") ]
+          }
+        , { selectors = [ Css.Class MyClass ]
+          , descriptor = [ ("color", "blue") ]
+          }
+        ]
     
-    -- compile a stylesheet with no @imports and a couple rules
-    stylesheet = Css.stylesheet imports [rule]
+    -- compile a stylesheet with imports and a single rule
+    stylesheet = Css.stylesheet imports rules
     
     -- now, add the style node, and safely use your ids and classes
     html =
         div []
-            [ stylesheet.node
+            [ Css.style [ Html.Attributes.scoped True ] stylesheet
             , div [ stylesheet.id MyId ] [ text "Using MyId" ]
             , div [ stylesheet.class MyClass ] [ text "Using MyClass" ]
             ]
@@ -45,14 +51,14 @@ For example:
 @docs Stylesheet, Sel, Pseudo, Descriptor, Rule
 
 # Functions
-@docs stylesheet
+@docs stylesheet, style
 -}
 
 import Html
 import Html.Attributes
 import String exposing (concat, cons, join)
 
-{-| A Stylesheet is a "compiled" Html style node, as well as functions
+{-| A Stylesheet is a "compiled" Html text node, as well as functions
 that allow you to safely create Html.Attributes for the id and class of
 your tags. It is returned by the stylesheet function.
 -}
@@ -240,19 +246,21 @@ importUrl url =
     concat [ "@import url(", url, ");" ]
 
 {-| Compiles a Stylesheet if given a list of urls to @import and
-a list of Rules to generate. The Stylesheet contains an Html.node
-to include in your DOM and functions for generating type-safe id and
-class Html.Attributes.
+a list of Rules to generate. The Stylesheet contains the imports,
+rules (rendered as strings) and functions for creating type-safe
+id and class attributes.
 -} 
 stylesheet : List String -> List (Rule id cls) -> Stylesheet id cls msg
 stylesheet urls rules =
-    { node = 
-        Html.node "style" []
-            [ Html.text <| 
-                (concat <| List.map importUrl urls) ++
-                (concat <| List.map rule rules)
-            ]
+    { node = Html.text << concat <|
+        (List.map importUrl urls) ++
+        (List.map rule rules)
     , id = Html.Attributes.id << toString
     , class = Html.Attributes.class << toString
     , classes = Html.Attributes.class << join " " << List.map toString
     }
+
+{-| Render a style tag node. -}
+style : List (Html.Attribute msg) -> Stylesheet id cls msg -> Html.Html msg
+style attributes sheet =
+    Html.node "style" attributes [ sheet.node ]
