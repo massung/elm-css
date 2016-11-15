@@ -217,8 +217,8 @@ sel : Sel id cls -> String
 sel selector =
     case selector of
         Type element -> element
-        Id id -> '#' `cons` (toString id)
-        Class cls -> '.' `cons` (toString cls)
+        Id id -> cons '#' (toString id)
+        Class cls -> cons '.' (toString cls)
         Descendant s1 s2 -> join " " [sel s2, sel s1]
         Child s1 s2 -> join " > " [sel s2, sel s1]
         Sibling s1 s2 -> join " ~ " [sel s2, sel s1]
