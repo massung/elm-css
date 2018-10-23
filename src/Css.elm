@@ -256,10 +256,10 @@ pseudo p =
             ":last-child"
 
         NthChild n ->
-            ":nth-child(" ++ toString n ++ ")"
+            ":nth-child(" ++ (String.fromInt n) ++ ")"
 
         NthLastChild n ->
-            ":nth-last-child(" ++ toString n ++ ")"
+            ":nth-last-child(" ++ (String.fromInt n) ++ ")"
 
         NthOfType s ->
             ":nth-of-type(" ++ s ++ ")"
@@ -319,10 +319,10 @@ sel selector =
             element
 
         Id id ->
-            cons '#' (toString id)
+            cons '#' (Debug.toString id)
 
         Class cls ->
-            cons '.' (toString cls)
+            cons '.' (Debug.toString cls)
 
         Descendant s1 s2 ->
             join " " [ sel s2, sel s1 ]
@@ -350,11 +350,11 @@ desc =
 {-| Render a rule (selectors and descriptor) to a string.
 -}
 rule : Rule id class -> String
-rule rule =
+rule r =
     concat
-        [ join "," <| List.map sel rule.selectors
+        [ join "," <| List.map sel r.selectors
         , "{"
-        , desc rule.descriptor
+        , desc r.descriptor
         , "}"
         ]
 
@@ -379,9 +379,9 @@ stylesheet urls rules =
         <|
             List.map importUrl urls
                 ++ List.map rule rules
-    , id = Html.Attributes.id << toString
-    , class = Html.Attributes.class << toString
-    , classes = Html.Attributes.class << join " " << List.map toString
+    , id = Html.Attributes.id << Debug.toString
+    , class = Html.Attributes.class << Debug.toString
+    , classes = Html.Attributes.class << join " " << List.map Debug.toString
     }
 
 
